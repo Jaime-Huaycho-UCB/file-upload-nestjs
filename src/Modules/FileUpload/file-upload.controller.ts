@@ -1,7 +1,7 @@
-import { Controller, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, UseInterceptors, UploadedFile, Delete, Param, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
-import { Express } from 'express'; // Necesario para tener el tipo correcto del archivo
+import { Express, Response } from 'express'; 
 
 @Controller('upload')
 export class FileUploadController {
@@ -27,6 +27,22 @@ export class FileUploadController {
             };
         } catch (error) {
             return { message: 'Error al subir el archivo', error: error.message };
+        }
+    }
+
+    @Delete(':filename')
+    async deleteFile(@Param('filename') filename: string,@Res() res: Response) {
+        try {
+            await this.fileUploadService.deleteFile(filename);
+            return res.status(200).json({
+                code: 200,
+                message: 'El archivo se elimino exitosamente'
+            });
+        } catch (error) {
+            return res.status(error.getStatus()).json({
+                code: error.getStatus(),
+                message: error.getResponse()
+            })
         }
     }
 }

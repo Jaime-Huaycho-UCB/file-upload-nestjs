@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Express } from 'express';
 import { writeFile } from 'fs/promises';
 import { extname } from 'path';
 import { join } from 'path';
+import { unlinkSync, existsSync } from 'fs';
 
 @Injectable()
 export class FileUploadService {
@@ -20,9 +21,9 @@ export class FileUploadService {
         };
     }
 
-    async saveFile(file: Express.Multer.File){
+    async saveFile(file: Express.Multer.File) {
         const manipulatedFile = await this.manipulateFile(file);
-        const filePath = join(this.uploadDir, manipulatedFile.filename); 
+        const filePath = join(this.uploadDir, manipulatedFile.filename);
 
         try {
             await writeFile(filePath, manipulatedFile.buffer);
@@ -34,6 +35,22 @@ export class FileUploadService {
 
     getFileUrl(filePath: string): string {
         const fileName = filePath.split('/').pop();
-        return `/files/${fileName}`;
+        return `${fileName}`;
+    }
+
+
+    async deleteFile(filename: string) {
+        const filePath = join(this.uploadDir,filename);
+
+        if (!existsSync(filePath)) {
+            throw new HttpException(`El archivo ${filename} no existe`,404);
+        }
+
+        try {
+            unlinkSync(filePath);
+            return true;
+        } catch (error) {
+            throw new HttpException('No se pudo eliminar el archivo',500);
+        }
     }
 }

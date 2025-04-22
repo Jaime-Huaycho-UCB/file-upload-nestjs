@@ -8,8 +8,8 @@ import { FileUploadModule } from './Modules/FileUpload/file-upload.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'), // Carpeta donde se almacenan los archivos
-      serveRoot: '/files', // La URL base para acceder a los archivos
+      rootPath: join(__dirname, '..', 'uploads'), 
+      serveRoot: '/files', 
     }),
     FileUploadModule
   ],
