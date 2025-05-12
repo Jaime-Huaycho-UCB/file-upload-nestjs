@@ -23,7 +23,7 @@ export class FileUploadService {
 
     async saveFile(file: Express.Multer.File) {
         const manipulatedFile = await this.manipulateFile(file);
-        const filePath = join(this.uploadDir, manipulatedFile.filename);
+        const filePath = join(manipulatedFile.filename);
 
         try {
             await writeFile(filePath, manipulatedFile.buffer);
