@@ -15,15 +15,17 @@ export class FileUploadController {
         }
 
         try {
-            const manipulatedFile = await this.fileUploadService.manipulateFile(file);
+            // const manipulatedFile = await this.fileUploadService.manipulateFile(file);
 
-            const filePath = await this.fileUploadService.saveFile(manipulatedFile);
+            const filePath = await this.fileUploadService.saveFile(file);
 
-            const fileUrl = this.fileUploadService.getFileUrl(filePath);
+            // const fileUrl = this.fileUploadService.getFileUrl(filePath);
 
             return {
                 message: 'Archivo subido exitosamente',
-                fileUrl,
+                fileData: {
+                    ...filePath
+                },
             };
         } catch (error) {
             return { message: 'Error al subir el archivo', error: error.message };

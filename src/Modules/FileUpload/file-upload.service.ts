@@ -27,7 +27,13 @@ export class FileUploadService {
 
         try {
             await writeFile(filePath, manipulatedFile.buffer);
-            return manipulatedFile.filename;
+            // return manipulatedFile.filename;
+            return {
+                name: manipulatedFile.originalname,
+                route: manipulatedFile.filename,
+                type: manipulatedFile.mimetype,
+                size: manipulatedFile.size,
+            };
         } catch (error) {
             throw new Error('Error al guardar el archivo: ' + error.message);
         }
